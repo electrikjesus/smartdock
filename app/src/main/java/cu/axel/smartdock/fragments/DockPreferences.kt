@@ -23,7 +23,7 @@ class DockPreferences : PreferenceFragmentCompat() {
         }
         val activationArea = findPreference<SliderPreference>("dock_activation_area")
         activationArea!!.isVisible =
-            activationArea.sharedPreferences!!.getString("activation_method", "swipe") == "swipe"
+            activationArea.sharedPreferences!!.getString("activation_method", "handle") == "swipe"
         activationArea.setOnDialogShownListener(object : SliderPreference.OnDialogShownListener {
             override fun onDialogShown() {
                 val slider = activationArea.slider
@@ -43,7 +43,7 @@ class DockPreferences : PreferenceFragmentCompat() {
         })
         val handleOpacity = findPreference<SliderPreference>("handle_opacity")
         handleOpacity!!.isVisible =
-            handleOpacity.sharedPreferences!!.getString("activation_method", "swipe") == "handle"
+            handleOpacity.sharedPreferences!!.getString("activation_method", "handle") == "handle"
         handleOpacity.setOnDialogShownListener(object : SliderPreference.OnDialogShownListener {
             override fun onDialogShown() {
                 val slider = handleOpacity.slider

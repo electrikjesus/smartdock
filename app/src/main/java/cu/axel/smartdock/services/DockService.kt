@@ -882,7 +882,7 @@ class DockService : AccessibilityService(), OnSharedPreferenceChangeListener, On
                     override fun onAnimationStart(p1: Animation) {}
                     override fun onAnimationEnd(p1: Animation) {
                         dockLayout.visibility = View.GONE
-                        if (sharedPreferences.getString("activation_method", "swipe") == "swipe") {
+                        if (sharedPreferences.getString("activation_method", "handle") == "swipe") {
                             val height =
                                 sharedPreferences.getString("dock_activation_area", "10")!!.toInt()
                             dockLayoutParams.height = Utils.dpToPx(context, height)
@@ -1452,7 +1452,7 @@ class DockService : AccessibilityService(), OnSharedPreferenceChangeListener, On
 
     private fun updateActivationMethod() {
         if (!isPinned) {
-            val method = sharedPreferences.getString("activation_method", "swipe")
+            val method = sharedPreferences.getString("activation_method", "handle")
             if (method == "swipe") {
                 dockHandle.visibility = View.GONE
                 updateDockTrigger()

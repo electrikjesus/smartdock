@@ -65,7 +65,7 @@
             android:title="@string/activation_method" 
             android:entryValues="@array/activation_method_values" 
             android:key="activation_method"
-            android:defaultValue="swipe" />
+            android:defaultValue="handle" />
 		
 		<cu.axel.smartdock.preferences.SliderPreference
 		    android:inputType="number"
