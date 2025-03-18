@@ -19,6 +19,7 @@ import android.view.Display
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
+import cu.axel.smartdock.BuildConfig
 import cu.axel.smartdock.models.App
 import cu.axel.smartdock.models.AppTask
 import cu.axel.smartdock.models.DockApp
@@ -186,7 +187,9 @@ object AppUtils {
         activityManager: ActivityManager, packageManager: PackageManager, max: Int
     ): ArrayList<AppTask> {
         val tasksInfo = activityManager.getRunningTasks(max)
-        currentApp = tasksInfo[0].baseActivity!!.packageName
+        currentApp = if (tasksInfo.size > 0)
+            tasksInfo[0].baseActivity!!.packageName
+        else BuildConfig.APPLICATION_ID
         val appTasks = ArrayList<AppTask>()
         for (taskInfo in tasksInfo) {
             try {
