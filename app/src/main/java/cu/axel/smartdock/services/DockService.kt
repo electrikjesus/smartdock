@@ -1939,12 +1939,12 @@ class DockService : AccessibilityService(), OnSharedPreferenceChangeListener, On
 
     private fun updateDockBackgroundColor() {
         ColorUtils.applyMainColor(context, sharedPreferences, dockLayout)
-        if (sharedPreferences.getBoolean("override_dock_background_alpha", false))
+        if (sharedPreferences.getBoolean("override_dock_background_alpha", true))
             applyDockAlpha()
     }
 
     private fun applyDockAlpha() {
-        val alpha = sharedPreferences.getInt("dock_background_alpha", 255)
+        val alpha = sharedPreferences.getInt("dock_background_alpha", 128)
         dockLayout.background.alpha = alpha
     }
 
