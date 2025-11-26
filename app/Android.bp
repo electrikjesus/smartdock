@@ -39,9 +39,10 @@ android_app {
     certificate: "platform",
     privileged: true,
 
-    // Optimize the final APK
+    // Optimize the final APK and apply keep rules
     optimize: {
         enabled: true,
         shrink: true,
+        proguard_flags_files: ["proguard-rules.pro"],
     },
 }
