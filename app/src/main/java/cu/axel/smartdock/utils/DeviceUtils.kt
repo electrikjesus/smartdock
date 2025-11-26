@@ -294,7 +294,7 @@ object DeviceUtils {
     }
 
     fun hasWriteSettingsPermission(context: Context): Boolean {
-        return ContextCompat.checkSelfPermission(
+        return AppUtils.isSystemApp(context, context.packageName) || ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.WRITE_SECURE_SETTINGS
         ) == PackageManager.PERMISSION_GRANTED
