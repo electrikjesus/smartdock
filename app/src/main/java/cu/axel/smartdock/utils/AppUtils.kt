@@ -34,13 +34,15 @@ object AppUtils {
         val packages = context.packageManager.getInstalledPackages(0)
         packages.forEach { packageInfo ->
             val appInfo = packageInfo.applicationInfo
-            apps.add(
-                App(
-                    appInfo.loadLabel(context.packageManager).toString(),
-                    appInfo.packageName,
-                    appInfo.loadIcon(context.packageManager)
+            appInfo?.let {
+                apps.add(
+                    App(
+                        it.loadLabel(context.packageManager).toString(),
+                        it.packageName,
+                        it.loadIcon(context.packageManager)
+                    )
                 )
-            )
+            }
         }
         return apps.sortedWith(compareBy { it.name })
     }
