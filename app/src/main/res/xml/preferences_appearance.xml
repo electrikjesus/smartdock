@@ -32,10 +32,11 @@
     <PreferenceCategory android:title="@string/dock">
         <SwitchPreferenceCompat
             android:key="override_dock_background_alpha"
-            android:title="@string/override_dock_background_alpha" />
+            android:title="@string/override_dock_background_alpha" 
+            android:defaultValue="true"/>
 
         <cu.axel.smartdock.preferences.SliderPreference
-            android:defaultValue="255"
+            android:defaultValue="0"
             android:dependency="override_dock_background_alpha"
             android:key="dock_background_alpha"
             android:title="@string/dock_background_transparency" />

@@ -1944,7 +1944,7 @@ class DockService : AccessibilityService(), OnSharedPreferenceChangeListener, On
     }
 
     private fun applyDockAlpha() {
-        val alpha = sharedPreferences.getInt("dock_background_alpha", 128)
+        val alpha = sharedPreferences.getInt("dock_background_alpha", 0)
         dockLayout.background.alpha = alpha
     }
 
