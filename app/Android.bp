@@ -1,0 +1,47 @@
+android_app {
+    name: "SmartDock",
+
+    srcs: ["src/main/java/**/*.kt"],
+
+    resource_dirs: ["src/main/res"],
+
+    static_libs: [
+        "androidx.appcompat_appcompat",
+        "androidx.preference_preference",
+        "com.google.android.material_material",
+        "androidx.core_core-ktx",
+        "androidx.recyclerview_recyclerview",
+        "androidx-constraintlayout_constraintlayout"
+    ],
+    
+    manifest: "src/main/AndroidManifest.xml",
+
+    package_name: "cu.axel.smartdock",
+
+    // Build for 64-bit architectures only
+    arch: {
+        arm: {
+            enabled: false,
+        },
+        arm64: {
+            enabled: true,
+        },
+        x86: {
+            enabled: false,
+        },
+        x86_64: {
+            enabled: true,
+        },
+    },
+    
+    // Sign with the platform key and grant privileged permissions
+    platform_apis: true,
+    certificate: "platform",
+    privileged: true,
+
+    // Optimize the final APK
+    optimize: {
+        enabled: true,
+        shrink: true,
+    },
+}
