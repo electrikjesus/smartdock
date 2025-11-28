@@ -52,12 +52,11 @@ class AdvancedPreferences : PreferenceFragmentCompat() {
             false
         }
 
-        val hideNav = findPreference<SwitchPreferenceCompat>("hide_nav_buttons")
-        val result = DeviceUtils.runAsRoot("cat /system/build.prop")
-        hideNav!!.isChecked = result.contains("qemu.hw.mainkeys=1")
-        rootAvailable = result != "error"
+        val hideNav = findPreference<SwitchPreferenceCompat>("hide_nav_buttons")!!
+        hideNav.isChecked = DeviceUtils.getSystemProp("qemu.hw.mainkeys").trim() == "1"
+        rootAvailable = DeviceUtils.runAsRoot("echo test") != "error"
 
-        findPreference<Preference>("root_category")!!.isEnabled = rootAvailable
+        findPreference<Preference>("root_category")!!.isEnabled = rootAvailable || hasWriteSettingsPermission
         if (rootAvailable && !hasWriteSettingsPermission) {
             DeviceUtils.grantPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
             hasWriteSettingsPermission = DeviceUtils.hasWriteSettingsPermission(requireContext())
@@ -88,18 +87,11 @@ class AdvancedPreferences : PreferenceFragmentCompat() {
             }
         }
 
-        if (rootAvailable) {
+        if (rootAvailable || hasWriteSettingsPermission) {
             hideNav.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue as Boolean) {
-                    val status =
-                        DeviceUtils.runAsRoot("echo qemu.hw.mainkeys=1 >> /system/build.prop")
-                    if (status != "error")
-                        showRebootDialog(requireContext(), false)
-                } else {
-                    val status =
-                        DeviceUtils.runAsRoot("sed -i /qemu.hw.mainkeys=1/d /system/build.prop")
-                    if (status != "error")
-                        showRebootDialog(requireContext(), false)
+                val value = if (newValue as Boolean) "1" else "0"
+                if (DeviceUtils.setSystemProp("qemu.hw.mainkeys", value)) {
+                    showRebootDialog(requireContext(), false)
                 }
                 false
             }
@@ -108,10 +100,17 @@ class AdvancedPreferences : PreferenceFragmentCompat() {
             if (DeviceUtils.isBliss() && Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
                 val disableTaskbar = findPreference<SwitchPreferenceCompat>("disable_taskbar")!!
                 disableTaskbar.isVisible = true
-                disableTaskbar.isChecked =
-                    DeviceUtils.runAsRoot("settings get system ${DeviceUtils.ENABLE_TASKBAR}") == "0"
-                disableTaskbar.setOnPreferenceChangeListener { _, isChecked ->
-                    return@setOnPreferenceChangeListener DeviceUtils.runAsRoot("settings put system ${DeviceUtils.ENABLE_TASKBAR} ${if (isChecked as Boolean) "0" else "1"}") != "error"
+                if (hasWriteSettingsPermission) {
+                    disableTaskbar.isChecked = Settings.System.getString(requireContext().contentResolver, DeviceUtils.ENABLE_TASKBAR) == "0"
+                    disableTaskbar.setOnPreferenceChangeListener { _, isChecked ->
+                        Settings.System.putString(requireContext().contentResolver, DeviceUtils.ENABLE_TASKBAR, if (isChecked as Boolean) "0" else "1")
+                    }
+                } else if(rootAvailable) {
+                    disableTaskbar.isChecked =
+                        DeviceUtils.runAsRoot("settings get system ${DeviceUtils.ENABLE_TASKBAR}") == "0"
+                    disableTaskbar.setOnPreferenceChangeListener { _, isChecked ->
+                        return@setOnPreferenceChangeListener DeviceUtils.runAsRoot("settings put system ${DeviceUtils.ENABLE_TASKBAR} ${if (isChecked as Boolean) "0" else "1"}") != "error"
+                    }
                 }
             }
         }

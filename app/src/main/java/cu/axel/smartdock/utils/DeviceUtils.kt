@@ -246,10 +246,25 @@ object DeviceUtils {
 
     @SuppressLint("PrivateApi")
     fun getSystemProp(prop: String): String {
-        val systemPropertiesClass = Class.forName("android.os.SystemProperties")
-        val getMethod = systemPropertiesClass.getMethod("get", String::class.java)
+        return try {
+            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
+            val getMethod = systemPropertiesClass.getMethod("get", String::class.java)
+            getMethod.invoke(null, prop) as String
+        } catch (e: Exception) {
+            ""
+        }
+    }
 
-        return getMethod.invoke(null, prop) as String
+    @SuppressLint("PrivateApi")
+    fun setSystemProp(prop: String, value: String): Boolean {
+        return try {
+            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
+            val setMethod = systemPropertiesClass.getMethod("set", String::class.java, String::class.java)
+            setMethod.invoke(null, prop, value)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun isBliss(): Boolean {
