@@ -104,6 +104,7 @@ class AdvancedPreferences : PreferenceFragmentCompat() {
                     disableTaskbar.isChecked = Settings.System.getString(requireContext().contentResolver, DeviceUtils.ENABLE_TASKBAR) == "0"
                     disableTaskbar.setOnPreferenceChangeListener { _, isChecked ->
                         Settings.System.putString(requireContext().contentResolver, DeviceUtils.ENABLE_TASKBAR, if (isChecked as Boolean) "0" else "1")
+                        true
                     }
                 } else if(rootAvailable) {
                     disableTaskbar.isChecked =
